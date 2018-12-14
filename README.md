@@ -54,49 +54,41 @@ The program will print your Gateway's ID (e.g., `Your Gateway ID is A0D6BFFFFEB5
 
 ### Gateway conf
 
-These are a series of typical configuration steps for a Rak831 based gateway. First, modify your SD `boot` partition to get wifi and ssh access:
+These are a series of typical configuration steps for a Rak831 based gateway.  
+  
+First, modify your SD `boot` partition to get wifi and ssh access by creating an empty file `boot/ssh` and a `wpa_supplicant` configuration file `boot/wpa_supplicant.conf` with your wifi configuration:
+
 ```
-  create empty file boot/ssh
-  create boot/wpa_supplicant.conf with your wifi configuration (change country to yours):
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=CL
 
-    ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-    update_config=1
-    country=CL
-
-    network={
-            ssid="your-ssid"
-            psk="your-password"
-    }
+network={
+        ssid="your-ssid"
+        psk="your-password"
+}
 ```
   
-Now boot your gateway to configure it:
+Now boot your gateway to configure it.  
+Start by running `sudo raspi-config` and changing your password and configuring localisation, enabling SPI at the interfaces and expanding your root filesystem.  
+If you are using a GPS, then also disable serial login shell and enable hardware serial at the interfaces options.
+
+Install necessary packages:
 ```
-- Configure interfaces, locale, password and filesytem:
-  sudo raspi-config
-    change password
-    change localisation
-    enable spi
-    disable serial login shell, enable hardware serial (when using a gps)
-    expand filesystem
+apt-get install git
+apt-get install dirmngr
+```
+Get the ic880a-gateway code:
+```
+git clone -b spi https://github.com/ttn-zh/ic880a-gateway.git
+cd ic880a-gateway
+```
+Open `start.sh` and change reset pin from 25 to 17, then install with `sudo ./install.sh`.  
+This will install default configurations at `/opt/ttn-gateway/bin`. You may override them by hand or using this program by running `sudo ./rak831rpi`.
 
-- Install packages:
-  apt-get install git
-  apt-get install dirmngr
+Finally, install and configure an optional gateway bridge (use https://www.loraserver.io/lora-gateway-bridge/overview/downloads/ for loraserver), and restart your services:
 
-- Get the ic880a-gateway code:
-  git clone -b spi https://github.com/ttn-zh/ic880a-gateway.git
-
-- Modify reset pin at ic880a-gateway/start.sh:
-  change start.sh pin from 25 to 17
-
-- Install ic880a-gateway:
-  sudo ./install.sh
-
-- Copy the cross compiled binary to your RPi:
-  scp rak831pi pi@your-ip:~/
-
-- Run the configurator:
-  sudo ./rak831rpi
-
-- Optionally install a gateway bridge (use https://www.loraserver.io/lora-gateway-bridge/overview/downloads/ for loraserver).
+```
+sudo service ttn-gateway restart
+sudos ervice lora-gateway-bridge restart
 ```
