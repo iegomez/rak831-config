@@ -93,7 +93,7 @@ Now boot your gateway to configure it:
   sudo ./install.sh
 
 - Copy the cross compiled binary to your RPi:
-  scp pi@your-ip:~/
+  scp rak831pi pi@your-ip:~/
 
 - Run the configurator:
   sudo ./rak831rpi
