@@ -23,7 +23,7 @@ Usage of ./rak831:
   -alt int
     	ref altitude (default 600)
   -band string
-    	band for global_conf.json: AS1, AS2, AU, CN, EU, IN, KR, RU OR US (default "AU")
+    	band for global_conf.json: AS1, AS2, AU, CN, EU, IN, KR, RU, US (default "AU")
   -down int
     	udp down port (default 1700)
   -eth string
