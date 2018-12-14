@@ -90,5 +90,5 @@ Finally, install and configure an optional gateway bridge (use https://www.loras
 
 ```
 sudo service ttn-gateway restart
-sudos ervice lora-gateway-bridge restart
+sudo service lora-gateway-bridge restart
 ```
